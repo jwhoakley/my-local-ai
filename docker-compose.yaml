@@ -1,6 +1,7 @@
 services:
   web:
     image: streamlit-front-end:latest
+    container_name: streamlit
     depends_on:
       - ollama
     ports:
@@ -10,6 +11,7 @@ services:
     restart: unless-stopped
   ollama:
     image: ollama/ollama:latest
+    container_name: ollama
     ports:
       - "11434:11434"
     volumes:
