@@ -11,3 +11,13 @@ Build the docker container - e.g. docker build -t streamlit-front-end:latest str
 To launch and detach: 'docker compose up -d'
 
 To launch and see log output: 'docker compose up'
+
+## Load the model
+
+Instruct Ollama to load and serve the model - 'docker exec -it ollama ollama pull llama3.1:8b'
+
+## Launch web front-end
+
+Open preferred web browser on your local machine
+Navigate to 'http://localhost:8501'
+Send test chat message - 'test'
