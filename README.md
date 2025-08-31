@@ -13,6 +13,7 @@ Build the docker container, e.g.
 ```
 docker build -t streamlit-front-end:latest streamlit-front-end/.
 ```
+Note: the docker compose file pulls the 'latest' release of the streamlit-front-end container from your local image repository. If you name it differently or tag it differently, make sure you update the docker compose file.
 
 ## Run docker compose
 
