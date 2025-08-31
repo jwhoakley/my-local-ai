@@ -3,12 +3,12 @@ import os
 import json
 import requests
 import streamlit as st
-from streamlit_autorefresh import st_autorefresh  # pip install streamlit-autorefresh
+from streamlit_autorefresh import st_autorefresh  
 
-st.set_page_config(page_title="Ollama Manager", page_icon="🤖")
+st.set_page_config(page_title="Ollama Experiments", page_icon="🤖")
 default_base_url = os.getenv('OLLAMA_HOST')
 
-# --- Helpers ---
+# --- Helper: Get List of pulled models ---
 def get_pulled_models(base_url=None):
     base_url = base_url or default_base_url
 
@@ -23,6 +23,7 @@ def get_pulled_models(base_url=None):
     except requests.RequestException as e:
         return [], str(e)
 
+# --- Helper: Get List of pulled models ---
 def pull_model_stream(model_name, base_url=None):
     base_url = base_url or default_base_url
 
@@ -92,16 +93,18 @@ if "chosen_model" not in st.session_state:
 
 # --- Sidebar ---
 with st.sidebar:
-    st.title("⚙️  Controls - app-3")
+    # --- Sidebar: Ollama Controls
+    st.title("⚙️  AI Controls")
 
-    # --- Setup variables
+    # --- Setup
     base_url = st.sidebar.text_input("Ollama Base URL", value=default_base_url, help="e.g., http://ollama:11434")
     temperature = st.slider("Temperature", 0.0, 1.5, 0.7)
     max_tokens = st.sidebar.number_input("Max Tokens (0 = Ollama default)", min_value=0, value=0, step=100)
     clear = st.sidebar.button("Clear chat history")
 
+    # --- Sidebar: Ollama Health / Status
     st.markdown("---")
-    st.subheader("🩺 Ollama Health / Status")
+    st.subheader("🩺 Ollama Status")
     pulled_models, health_info = get_pulled_models()
 
     # Use a container so only this part refreshes
@@ -121,6 +124,7 @@ with st.sidebar:
         else:
             st.info("No models pulled yet.")
 
+    # --- Sidebar: Choose Model
     st.markdown("---")
     st.subheader("Choose model (pulled only)")
 
@@ -136,11 +140,12 @@ with st.sidebar:
         st.session_state["chosen_model"] = None
         st.info("No pulled models available. Pull a model below.")
 
+    # --- Sidebar: Pull Model
     st.markdown("---")
     st.subheader("⬇️ Pull Model")
 
     # freeform text input instead of selectbox
-    model_to_pull = st.text_input("Enter model name to pull:", key="pull_text", help="See https://ollama.com/search for all available Ollama models.")
+    model_to_pull = st.text_input("Enter model name to pull:", key="pull_text", help="For available Ollama models, see https://ollama.com/search")
     if st.button("Pull model", key="pull_button") and model_to_pull.strip():
         progress = st.empty()
         with st.spinner(f"Pulling {model_to_pull}..."):
@@ -165,7 +170,7 @@ if "messages" not in st.session_state or clear:
     ]
 
 # --- Main App Body ---
-st.title("💬 Ollama Chat - app-3")
+st.title("💬 Ollama Chat")
 st.caption("This interface connects to your local Ollama server and streams the responses.")
 
 # read the chosen model safely
@@ -175,6 +180,13 @@ if model:
     # proceed to use `model` when calling Ollama
 else:
     st.warning("No model selected. Either pull a model or wait until Ollama is healthy.")
+
+# --- Render history (skip initial system message) ---
+for m in st.session_state.messages:
+    if m["role"] == "system":
+        continue
+    with st.chat_message(m["role"]):
+        st.markdown(m["content"])
 
 # --- Input box ---
 user_prompt = st.chat_input("Type your message")
