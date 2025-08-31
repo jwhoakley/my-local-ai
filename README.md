@@ -4,7 +4,7 @@ A solution to run an AI LLM on your local machine based on docker containers, us
 
 ## Build Streamlit Front-End container image
 
-Create a symlink to the app-v<x>.py you want to use, e.g.:
+If it's not there already, create a symlink from the app config version you want to use to 'app.py', e.g.:
 ```
 ln -s app-v4.py app.py
 ```
