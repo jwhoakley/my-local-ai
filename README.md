@@ -4,20 +4,36 @@ A solution to run an AI LLM on your local machine based on docker containers, us
 
 ## Build Streamlit Front-End container image
 
-Build the docker container - e.g. docker build -t streamlit-front-end:latest streamlit-front-end/.
+Create a symlink to the app-v<x>.py you want to use, e.g.:
+```
+ln -s app-v4.py app.py
+```
+
+Build the docker container, e.g. 
+```
+docker build -t streamlit-front-end:latest streamlit-front-end/.
+```
 
 ## Run docker compose
 
-To launch and detach: 'docker compose up -d'
+To launch and detach:
+```
+docker compose up -d
+```
 
-To launch and see log output: 'docker compose up'
+To launch and see log output:
+```
+docker compose up
+```
 
 ## Load the model
 
-Instruct Ollama to load and serve the model - 'docker exec -it ollama ollama pull llama3.1:8b'
+Instruct Ollama to load and serve the model:
+```
+docker exec -it ollama ollama pull llama3.1:8b
+```
 
 ## Launch web front-end
 
-Open preferred web browser on your local machine
-Navigate to 'http://localhost:8501'
-Send test chat message - 'test'
+* Open preferred web browser on your local machine and navigate to 'http://localhost:8501'
+* Send test chat message - e.g. 'test' - to check that the model is responding
